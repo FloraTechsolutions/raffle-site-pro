@@ -6,8 +6,8 @@ export const WHATSAPP_NUMBER = "5511999999999";
 
 export const RAFFLES = [
   { id: 1, titulo: "PIX DE R$ 100.000,00", desc: "Prêmio principal em dinheiro vivo.", preco: 0.50, vendidos: 460000, total: 500000, img: rifa1 },
-  { id: 2, titulo: "PIX DE R$ 20.000,00", desc: "Sorteio rápido para 100k cotas.", preco: 0.20, vendidos: 85000, total: 100000, img: rifa2 },
-  { id: 3, titulo: "PIX DE R$ 5.000,00", desc: "Chance alta de ganhar hoje!", preco: 0.05, vendidos: 12000, total: 30000, img: rifa3 },
+  { id: 2, titulo: "PIX DE R$ 1.000,00", desc: "Sorteio expresso — resultado em 60 min!", preco: 0.50, vendidos: 1500, total: 2000, img: rifa2 },
+  { id: 3, titulo: "PIX DE R$ 500,00", desc: "Sua chance rápida de ganhar hoje!", preco: 0.50, vendidos: 800, total: 1000, img: rifa3 },
 ];
 
 export const RANKING = [
