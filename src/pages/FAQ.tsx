@@ -6,60 +6,60 @@ import WhatsAppFAB from "@/components/WhatsAppFAB";
 
 const FAQ_SECTIONS = [
   {
-    title: "Segurança & Transparência",
+    title: "Segurança e Transparência",
     icon: Shield,
     items: [
       {
-        q: "Os sorteios são realmente aleatórios e justos?",
-        a: "Sim. Nosso sistema utiliza um algoritmo de criptografia ponta a ponta, impossível de manipular. Os resultados são vinculados à Loteria Federal, garantindo sorteios 100% aleatórios e auditáveis. Nenhum funcionário, administrador ou terceiro pode influenciar o resultado.",
+        q: "O sorteio é realmente seguro?",
+        a: "Sim. Utilizamos um algoritmo de criptografia de ponta a ponta para a geração dos números premiados. O sistema opera de forma autônoma e descentralizada, o que torna o resultado impossível de ser manipulado por qualquer pessoa, inclusive pela administração do site. Cada bilhete gerado possui uma assinatura digital única vinculada ao sorteio.",
         icon: Lock,
       },
       {
-        q: "Como posso verificar a autenticidade do sorteio?",
-        a: "Cada sorteio possui um hash criptográfico público gerado antes do início. Após o resultado, você pode verificar a integridade comparando o hash com o resultado da Loteria Federal. Transparência total.",
-        icon: Shield,
+        q: "Como funciona a auditoria dos números?",
+        a: "Todos os números são gerados através de uma função matemática de hash (SHA-256), garantindo que a sequência seja 100% aleatória e auditável.",
+        icon: Hash,
       },
       {
         q: "Meus dados estão protegidos?",
         a: "Utilizamos criptografia SSL/TLS em todas as conexões e seus dados pessoais são armazenados de forma segura, em conformidade com a LGPD. Nunca compartilhamos suas informações com terceiros.",
-        icon: Lock,
+        icon: Shield,
       },
     ],
   },
   {
-    title: "Saldo & Regras",
+    title: "Pagamentos e Saldo",
     icon: Wallet,
     items: [
       {
-        q: "O que acontece se a rifa não atingir 90% de adesão?",
-        a: "Caso o lote da rifa não alcance 90% de adesão até o horário do sorteio, o valor total do seu PIX é depositado integralmente na sua conta como saldo. Você não perde nada.",
+        q: "O que acontece se a rifa não atingir o lote mínimo?",
+        a: "Nossa prioridade é a sua participação. Caso o lote de uma rifa específica não alcance 90% das cotas vendidas até o horário do sorteio, o valor investido não é perdido: ele é automaticamente estornado para o seu perfil na plataforma como Saldo Interno.",
         icon: RefreshCw,
       },
       {
-        q: "Como funciona o saldo na minha conta?",
-        a: "O dinheiro acumulado na sua conta é exclusivo para a compra de novas rifas dentro da plataforma GoldenRifa. Você pode usar seu saldo para adquirir cotas em qualquer sorteio ativo, maximizando suas chances de ganhar.",
+        q: "Como posso utilizar meu saldo acumulado?",
+        a: "O saldo disponível em sua conta é exclusivo para a aquisição de novas cotas em qualquer sorteio ativo no GoldenRifa. É uma forma prática de garantir que você nunca perca a chance de concorrer, mesmo que um lote específico não seja concluído.",
         icon: Wallet,
       },
       {
-        q: "Posso sacar meu saldo em dinheiro?",
-        a: "O saldo disponível na plataforma é destinado exclusivamente para a compra de cotas em novos sorteios. Essa regra garante a sustentabilidade e segurança do ecossistema para todos os participantes.",
-        icon: CreditCard,
-      },
-    ],
-  },
-  {
-    title: "Pagamentos & Prêmios",
-    icon: DollarSign,
-    items: [
-      {
-        q: "Como recebo meu prêmio?",
-        a: "O PIX do prêmio é realizado instantaneamente após a finalização do sorteio, diretamente para a chave PIX registrada no seu perfil. Sem burocracia, sem espera — dinheiro no bolso em segundos.",
+        q: "Recebi um prêmio! Como recebo o dinheiro?",
+        a: "O pagamento é instantâneo. Assim que o sorteio é finalizado e o sistema valida o ganhador, o valor é transferido via PIX em tempo real para a chave cadastrada em seu perfil. Sem burocracia, sem espera.",
         icon: Zap,
       },
       {
         q: "Quais formas de pagamento são aceitas?",
         a: "Aceitamos pagamentos exclusivamente via PIX, garantindo transações instantâneas, seguras e sem taxas adicionais. O QR Code é gerado automaticamente ao finalizar sua compra.",
         icon: CreditCard,
+      },
+    ],
+  },
+  {
+    title: "Dinâmica dos Sorteios",
+    icon: DollarSign,
+    items: [
+      {
+        q: "Qual a diferença entre a Rifa de 60 Minutos e a Rifa das 21h?",
+        a: "Rifas de 60 Minutos: São sorteios expressos de alta rotatividade, ideais para quem busca resultados rápidos ao longo do dia. Rifas das 21h: É o nosso sorteio principal diário, com lotes maiores e prêmios diferenciados, ocorrendo sempre no horário nobre.",
+        icon: Clock,
       },
       {
         q: "Existe um valor mínimo de compra?",
