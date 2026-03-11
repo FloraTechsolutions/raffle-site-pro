@@ -1,4 +1,4 @@
-import { Shield, Wallet, DollarSign, Zap, HelpCircle, Lock, RefreshCw, CreditCard, Award } from "lucide-react";
+import { Shield, Wallet, DollarSign, Zap, HelpCircle, Lock, RefreshCw, CreditCard, Award, Clock, Moon, Hash } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
