@@ -5,9 +5,9 @@ import rifa3 from "@/assets/rifa-3.png";
 export const WHATSAPP_NUMBER = "5511999999999";
 
 export const RAFFLES = [
-  { id: 1, titulo: "PIX DE R$ 100.000,00", desc: "Prêmio principal em dinheiro vivo.", preco: 0.50, vendidos: 460000, total: 500000, img: rifa1 },
-  { id: 2, titulo: "PIX DE R$ 1.000,00", desc: "Sorteio expresso — resultado em 60 min!", preco: 0.50, vendidos: 1500, total: 2000, img: rifa2 },
-  { id: 3, titulo: "PIX DE R$ 500,00", desc: "Sua chance rápida de ganhar hoje!", preco: 0.50, vendidos: 800, total: 1000, img: rifa3 },
+  { id: 1, titulo: "PIX DE R$ 500,00", desc: "Prêmio principal em dinheiro vivo.", preco: 0.50, vendidos: 4600, total: 5000, img: rifa1 },
+  { id: 2, titulo: "PIX DE R$ 200,00", desc: "Sorteio expresso — resultado em 60 min!", preco: 0.50, vendidos: 1500, total: 2000, img: rifa2 },
+  { id: 3, titulo: "PIX DE R$ 100,00", desc: "Sua chance rápida de ganhar hoje!", preco: 0.50, vendidos: 800, total: 1000, img: rifa3 },
 ];
 
 export const RANKING = [
