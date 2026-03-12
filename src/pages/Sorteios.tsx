@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ProgressBar from "@/components/ProgressBar";
-import { RAFFLES, handleBuy } from "@/lib/data";
+import { EXPRESS_RAFFLES, NIGHTLY_RAFFLES, handleBuy } from "@/lib/data";
 
 const QUICK_AMOUNTS = [10, 20, 50, 100];
 
