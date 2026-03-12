@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ProgressBar from "@/components/ProgressBar";
-import { RAFFLES, handleBuy } from "@/lib/data";
+import { EXPRESS_RAFFLES, NIGHTLY_RAFFLES, handleBuy } from "@/lib/data";
 
 const QUICK_AMOUNTS = [10, 20, 50, 100];
 
@@ -50,7 +50,7 @@ const RaffleCard = ({
   badgeIcon: Icon,
   countdown,
 }: {
-  raffle: (typeof RAFFLES)[0];
+  raffle: (typeof EXPRESS_RAFFLES)[0];
   badge: string;
   badgeIcon: typeof Zap;
   countdown?: Date;
@@ -159,7 +159,7 @@ const Sorteios = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {RAFFLES.map((r) => (
+            {EXPRESS_RAFFLES.map((r) => (
               <RaffleCard key={`exp-${r.id}`} raffle={r} badge="Expressa" badgeIcon={Zap} countdown={expressEnd} />
             ))}
           </div>
@@ -181,7 +181,7 @@ const Sorteios = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {RAFFLES.map((r) => (
+            {NIGHTLY_RAFFLES.map((r) => (
               <RaffleCard key={`night-${r.id}`} raffle={r} badge="Noturna" badgeIcon={Moon} countdown={tonight} />
             ))}
           </div>
