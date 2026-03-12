@@ -1,6 +1,11 @@
 import rifa1 from "@/assets/rifa-1.png";
 import rifa2 from "@/assets/rifa-2.png";
 import rifa3 from "@/assets/rifa-3.png";
+import rifaNoturna1 from "@/assets/rifa-noturna-1.png";
+import rifaNoturna2 from "@/assets/rifa-noturna-2.png";
+import rifaNoturna3 from "@/assets/rifa-noturna-3.png";
+import rifaNoturna4 from "@/assets/rifa-noturna-4.png";
+import rifaNoturna5 from "@/assets/rifa-noturna-5.png";
 
 export const WHATSAPP_NUMBER = "5511999999999";
 
