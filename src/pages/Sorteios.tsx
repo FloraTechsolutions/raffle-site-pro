@@ -6,7 +6,7 @@ import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ProgressBar from "@/components/ProgressBar";
 import { RAFFLES, handleBuy } from "@/lib/data";
 
-const QUICK_AMOUNTS = [50, 100, 500, 1000];
+const QUICK_AMOUNTS = [10, 20, 30, 50, 100];
 
 /* ── Countdown hook ── */
 function useCountdown(targetDate: Date) {
