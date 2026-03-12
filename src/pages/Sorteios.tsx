@@ -50,7 +50,7 @@ const RaffleCard = ({
   badgeIcon: Icon,
   countdown,
 }: {
-  raffle: (typeof RAFFLES)[0];
+  raffle: (typeof EXPRESS_RAFFLES)[0];
   badge: string;
   badgeIcon: typeof Zap;
   countdown?: Date;
