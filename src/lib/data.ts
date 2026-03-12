@@ -21,12 +21,12 @@ export const EXPRESS_RAFFLES = [
 
 // Noturnas: total = premio × 2.5 × 1, preço = R$1,00/cota
 export const NIGHTLY_RAFFLES = [
-  { id: 7, titulo: "PIX DE R$ 1.000,00", desc: "O grande prêmio da noite!", preco: 1.00, vendidos: 2000, total: 2500, img: rifa1 },
-  { id: 8, titulo: "PIX DE R$ 800,00", desc: "Premiação noturna de alto valor!", preco: 1.00, vendidos: 1500, total: 2000, img: rifa2 },
-  { id: 9, titulo: "PIX DE R$ 600,00", desc: "Sorteio noturno — valor garantido!", preco: 1.00, vendidos: 1000, total: 1500, img: rifa3 },
-  { id: 10, titulo: "PIX DE R$ 500,00", desc: "Noturna premium com ótimas chances!", preco: 1.00, vendidos: 800, total: 1250, img: rifa1 },
-  { id: 11, titulo: "PIX DE R$ 400,00", desc: "Sorteio noturno expresso!", preco: 1.00, vendidos: 600, total: 1000, img: rifa2 },
-  { id: 12, titulo: "PIX DE R$ 200,00", desc: "Noturna acessível — participe agora!", preco: 1.00, vendidos: 300, total: 500, img: rifa3 },
+  { id: 7, titulo: "PIX DE R$ 1.000,00", desc: "O grande prêmio da noite!", preco: 1.00, vendidos: 2000, total: 2500, img: rifaNoturna1 },
+  { id: 8, titulo: "PIX DE R$ 800,00", desc: "Premiação noturna de alto valor!", preco: 1.00, vendidos: 1500, total: 2000, img: rifaNoturna2 },
+  { id: 9, titulo: "PIX DE R$ 600,00", desc: "Sorteio noturno — valor garantido!", preco: 1.00, vendidos: 1000, total: 1500, img: rifaNoturna3 },
+  { id: 10, titulo: "PIX DE R$ 500,00", desc: "Noturna premium com ótimas chances!", preco: 1.00, vendidos: 800, total: 1250, img: rifaNoturna4 },
+  { id: 11, titulo: "PIX DE R$ 400,00", desc: "Sorteio noturno expresso!", preco: 1.00, vendidos: 600, total: 1000, img: rifaNoturna5 },
+  { id: 12, titulo: "PIX DE R$ 200,00", desc: "Noturna acessível — participe agora!", preco: 1.00, vendidos: 300, total: 500, img: rifaNoturna1 },
 ];
 
 // Mantém RAFFLES como alias das expressas para compatibilidade
