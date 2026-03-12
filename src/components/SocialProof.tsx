@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Ticket } from "lucide-react";
 
-const NAMES = ["João", "Maria", "Pedro", "Letícia", "Fernando", "Beatriz", "Carlos", "Renata"];
-const AMOUNTS = [50, 100, 200, 500, 1000];
+const NAMES = ["Gabriel Silva", "Lucas Oliveira", "Matheus Santos", "Pedro Henrique Costa", "Guilherme Souza", "Felipe Rodrigues", "João Pedro Ferreira", "Rafael Alves", "Vitor Pereira", "Thiago Lima", "Bruno Gomes", "Nicolas Ribeiro", "Samuel Carvalho", "Daniel Martins", "Gustavo Rocha", "Leonardo Mendes", "Eduardo Freitas", "Diego Barbosa", "Rodrigo Cardoso", "Arthur Teixeira", "Ana Beatriz Silva", "Maria Eduarda Santos", "Julia Oliveira", "Alice Souza", "Sofia Rodrigues", "Beatriz Ferreira", "Mariana Alves", "Larissa Pereira", "Camila Lima", "Letícia Gomes", "Amanda Ribeiro", "Yasmin Carvalho", "Bruna Martins", "Isabela Rocha", "Fernanda Mendes", "Caroline Freitas", "Gabriela Barbosa", "Vitória Cardoso", "Marina Teixeira", "Luana Melo", "André Luiz Castro", "Ricardo Vieira", "Marcos Vinícius", "Fernando Machado", "Caio Antunes", "Patrícia Sales", "Renata Guimarães", "Tatiane Ramos", "Priscila Moraes", "Vanessa Borges"];
+const AMOUNTS = [10, 20, 30, 50, 100];
 
 const SocialProof = () => {
   const [toast, setToast] = useState<{ name: string; amount: number } | null>(null);
