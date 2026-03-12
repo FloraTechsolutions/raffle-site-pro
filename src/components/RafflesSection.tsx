@@ -3,7 +3,7 @@ import { ShoppingCart, Zap } from "lucide-react";
 import ProgressBar from "./ProgressBar";
 import { RAFFLES, handleBuy } from "@/lib/data";
 
-const QUICK_AMOUNTS = [10, 20, 30, 50, 100];
+const QUICK_AMOUNTS = [10, 20, 50, 100];
 
 const RaffleCard = ({ raffle }: { raffle: typeof RAFFLES[0] }) => {
   const [qty, setQty] = useState(100);
