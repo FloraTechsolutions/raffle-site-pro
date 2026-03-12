@@ -159,7 +159,7 @@ const Sorteios = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {RAFFLES.map((r) => (
+            {EXPRESS_RAFFLES.map((r) => (
               <RaffleCard key={`exp-${r.id}`} raffle={r} badge="Expressa" badgeIcon={Zap} countdown={expressEnd} />
             ))}
           </div>
