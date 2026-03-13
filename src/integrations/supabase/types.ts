@@ -14,16 +14,164 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          nome_completo: string | null
+          telefone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          nome_completo?: string | null
+          telefone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          nome_completo?: string | null
+          telefone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      raffles: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          draw_date: string | null
+          id: string
+          image_url: string | null
+          prize_value: number
+          status: Database["public"]["Enums"]["raffle_status"]
+          ticket_price: number
+          tickets_sold: number
+          tipo: Database["public"]["Enums"]["raffle_type"]
+          titulo: string
+          total_tickets: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          draw_date?: string | null
+          id?: string
+          image_url?: string | null
+          prize_value: number
+          status?: Database["public"]["Enums"]["raffle_status"]
+          ticket_price?: number
+          tickets_sold?: number
+          tipo?: Database["public"]["Enums"]["raffle_type"]
+          titulo: string
+          total_tickets: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          draw_date?: string | null
+          id?: string
+          image_url?: string | null
+          prize_value?: number
+          status?: Database["public"]["Enums"]["raffle_status"]
+          ticket_price?: number
+          tickets_sold?: number
+          tipo?: Database["public"]["Enums"]["raffle_type"]
+          titulo?: string
+          total_tickets?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ticket_purchases: {
+        Row: {
+          created_at: string
+          id: string
+          paid_at: string | null
+          pix_code: string | null
+          quantidade: number
+          raffle_id: string
+          status: Database["public"]["Enums"]["purchase_status"]
+          user_id: string
+          valor_total: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          pix_code?: string | null
+          quantidade: number
+          raffle_id: string
+          status?: Database["public"]["Enums"]["purchase_status"]
+          user_id: string
+          valor_total: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          pix_code?: string | null
+          quantidade?: number
+          raffle_id?: string
+          status?: Database["public"]["Enums"]["purchase_status"]
+          user_id?: string
+          valor_total?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ticket_purchases_raffle_id_fkey"
+            columns: ["raffle_id"]
+            isOneToOne: false
+            referencedRelation: "raffles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
+      purchase_status: "pending" | "paid" | "cancelled" | "expired"
+      raffle_status: "active" | "completed" | "cancelled"
+      raffle_type: "express" | "nightly"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +298,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+      purchase_status: ["pending", "paid", "cancelled", "expired"],
+      raffle_status: ["active", "completed", "cancelled"],
+      raffle_type: ["express", "nightly"],
+    },
   },
 } as const
