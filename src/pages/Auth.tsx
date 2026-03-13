@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Crown, Mail, Lock, Phone, Eye, EyeOff, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -8,6 +10,9 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signIn, signUp } = useAuth();
+  const navigate = useNavigate();
 
   const formatWhatsApp = (value: string) => {
     const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -16,9 +21,23 @@ const Auth = () => {
     return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // placeholder — will integrate with backend later
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await signIn(email, password);
+        toast.success("Login realizado com sucesso!");
+        navigate("/");
+      } else {
+        await signUp(email, password, { telefone: whatsapp });
+        toast.success("Conta criada! Verifique seu e-mail para confirmar.");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Erro na autenticação");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -164,10 +183,11 @@ const Auth = () => {
 
             <button
               type="submit"
-              className="w-full gold-gradient py-5 rounded-2xl text-primary-foreground font-black uppercase italic tracking-widest hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 pulse-gold"
+              disabled={loading}
+              className="w-full gold-gradient py-5 rounded-2xl text-primary-foreground font-black uppercase italic tracking-widest hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 pulse-gold disabled:opacity-50"
             >
-              {isLogin ? "Entrar" : "Criar Conta"}
-              <ArrowRight className="w-5 h-5" />
+              {loading ? "Aguarde..." : isLogin ? "Entrar" : "Criar Conta"}
+              {!loading && <ArrowRight className="w-5 h-5" />}
             </button>
           </form>
 
