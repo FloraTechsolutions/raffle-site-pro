@@ -1,1 +1,4 @@
 project_id = "aacwxstqwgjionwbnoqm"
+
+[functions.buy-tickets]
+verify_jwt = false
