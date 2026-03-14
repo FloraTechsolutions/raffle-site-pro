@@ -169,6 +169,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      process_ticket_purchase: {
+        Args: { p_quantidade: number; p_raffle_id: string; p_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
