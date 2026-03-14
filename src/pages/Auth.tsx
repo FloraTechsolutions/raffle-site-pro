@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Crown, Mail, Lock, Phone, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Crown, Mail, Lock, Phone, User, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Auth = () => {
@@ -9,9 +9,9 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [nomeCompleto, setNomeCompleto] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   const formatWhatsApp = (value: string) => {
@@ -26,11 +26,32 @@ const Auth = () => {
     setLoading(true);
     try {
       if (isLogin) {
-        await signIn(email, password);
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
         toast.success("Login realizado com sucesso!");
         navigate("/");
       } else {
-        await signUp(email, password, { telefone: whatsapp });
+        // Sign up
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { nome_completo: nomeCompleto, telefone: whatsapp },
+            emailRedirectTo: window.location.origin,
+          },
+        });
+        if (error) throw error;
+
+        // Insert profile row immediately if user was created
+        if (data.user) {
+          await supabase.from("profiles").upsert({
+            user_id: data.user.id,
+            nome_completo: nomeCompleto,
+            telefone: whatsapp,
+            saldo_carteira: 0,
+          }, { onConflict: "user_id" });
+        }
+
         toast.success("Conta criada! Verifique seu e-mail para confirmar.");
       }
     } catch (error: any) {
@@ -115,6 +136,24 @@ const Auth = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Nome Completo (register only) */}
+            {!isLogin && (
+              <div className="space-y-2 animate-fade-up">
+                <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nome Completo</label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    value={nomeCompleto}
+                    onChange={(e) => setNomeCompleto(e.target.value)}
+                    placeholder="Seu nome completo"
+                    className="w-full pl-12 pr-4 py-4 rounded-2xl bg-secondary border border-border text-sm font-medium placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Email */}
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">E-mail</label>

@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS saldo_carteira numeric NOT NULL DEFAULT 0.00;
