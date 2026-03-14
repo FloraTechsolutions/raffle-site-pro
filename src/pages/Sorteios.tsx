@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart, Zap, Clock, Moon } from "lucide-react";
+import { ShoppingCart, Zap, Clock, Moon, Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import ProgressBar from "@/components/ProgressBar";
-import { EXPRESS_RAFFLES, NIGHTLY_RAFFLES, handleBuy } from "@/lib/data";
+import { useRaffles, type Raffle } from "@/hooks/useRaffles";
+import { usePurchase } from "@/hooks/usePurchase";
 
 const QUICK_AMOUNTS = [10, 20, 50, 100];
 
@@ -32,7 +33,6 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-/* ── Countdown badge ── */
 const CountdownBadge = ({ target }: { target: Date }) => {
   const { h, m, s, expired } = useCountdown(target);
   if (expired) return <span className="text-destructive font-black text-xs">ENCERRADO</span>;
@@ -43,40 +43,43 @@ const CountdownBadge = ({ target }: { target: Date }) => {
   );
 };
 
-/* ── Raffle card (reuses same design from home) ── */
 const RaffleCard = ({
   raffle,
   badge,
   badgeIcon: Icon,
   countdown,
 }: {
-  raffle: (typeof EXPRESS_RAFFLES)[0];
+  raffle: Raffle;
   badge: string;
   badgeIcon: typeof Zap;
   countdown?: Date;
 }) => {
   const [qty, setQty] = useState(100);
+  const { buyTickets, purchasing } = usePurchase();
 
   return (
     <div className="glass rounded-4xl hover:border-primary/30 transition-all group overflow-hidden flex flex-col">
-      <div className="h-56 overflow-hidden relative">
-        <img
-          src={raffle.img}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-          alt={raffle.titulo}
-        />
-        <div className="absolute top-5 left-5 px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase flex items-center gap-1.5">
-          <Icon className="w-3 h-3 text-primary" />
-          {badge}
+      {raffle.image_url && (
+        <div className="h-56 overflow-hidden relative">
+          <img
+            src={raffle.image_url}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            alt={raffle.titulo}
+          />
+          <div className="absolute top-5 left-5 px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase flex items-center gap-1.5">
+            <Icon className="w-3 h-3 text-primary" />
+            {badge}
+          </div>
         </div>
-      </div>
+      )}
       <div className="p-8 space-y-6 flex-1 flex flex-col">
         <div className="space-y-2">
           <h4 className="text-2xl font-black uppercase italic tracking-tight">{raffle.titulo}</h4>
-          <p className="text-muted-foreground text-xs font-bold uppercase">{raffle.desc}</p>
+          {raffle.descricao && (
+            <p className="text-muted-foreground text-xs font-bold uppercase">{raffle.descricao}</p>
+          )}
         </div>
 
-        {/* Countdown */}
         {countdown && (
           <div className="flex items-center gap-3 glass px-5 py-3 rounded-2xl">
             <Clock className="w-4 h-4 text-primary" />
@@ -85,17 +88,17 @@ const RaffleCard = ({
           </div>
         )}
 
-        <ProgressBar vendidos={raffle.vendidos} total={raffle.total} />
+        <ProgressBar vendidos={raffle.tickets_sold} total={raffle.total_tickets} />
 
         <div className="flex justify-between items-center pt-4 border-t border-border">
           <div>
             <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">Cota por</p>
-            <p className="text-2xl font-black text-primary">R$ {raffle.preco.toFixed(2).replace(".", ",")}</p>
+            <p className="text-2xl font-black text-primary">R$ {Number(raffle.ticket_price).toFixed(2).replace(".", ",")}</p>
           </div>
           <div className="text-right">
             <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">Total</p>
             <p className="text-lg font-black">
-              {(raffle.preco * qty).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+              {(Number(raffle.ticket_price) * qty).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
             </p>
           </div>
         </div>
@@ -117,11 +120,12 @@ const RaffleCard = ({
         </div>
 
         <button
-          onClick={() => handleBuy(raffle, qty)}
-          className="mt-auto w-full bg-foreground text-background text-xs font-black uppercase py-4 rounded-2xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2"
+          onClick={() => buyTickets(raffle.id, qty)}
+          disabled={purchasing}
+          className="mt-auto w-full bg-foreground text-background text-xs font-black uppercase py-4 rounded-2xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
-          <ShoppingCart className="w-4 h-4" />
-          Comprar {qty} Cotas
+          {purchasing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShoppingCart className="w-4 h-4" />}
+          {purchasing ? "Processando..." : `Comprar ${qty} Cotas`}
         </button>
       </div>
     </div>
@@ -130,14 +134,17 @@ const RaffleCard = ({
 
 /* ── Page ── */
 const Sorteios = () => {
-  // Express raffles end in ~60 min from now (demo)
+  const { raffles: expressRaffles, loading: loadingExpress } = useRaffles("express");
+  const { raffles: nightlyRaffles, loading: loadingNightly } = useRaffles("nightly");
+
   const expressEnd = new Date(Date.now() + 60 * 60 * 1000);
 
-  // Nightly raffles at 21:00 today or tomorrow
   const now = new Date();
   const tonight = new Date(now);
   tonight.setHours(21, 0, 0, 0);
   if (tonight.getTime() <= now.getTime()) tonight.setDate(tonight.getDate() + 1);
+
+  const loading = loadingExpress || loadingNightly;
 
   return (
     <div className="min-h-screen">
@@ -158,11 +165,20 @@ const Sorteios = () => {
               </p>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {EXPRESS_RAFFLES.map((r) => (
-              <RaffleCard key={`exp-${r.id}`} raffle={r} badge="Expressa" badgeIcon={Zap} countdown={expressEnd} />
-            ))}
-          </div>
+
+          {loadingExpress ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : expressRaffles.length === 0 ? (
+            <p className="text-center text-muted-foreground font-bold py-10">Nenhuma rifa expressa ativa.</p>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {expressRaffles.map((r) => (
+                <RaffleCard key={r.id} raffle={r} badge="Expressa" badgeIcon={Zap} countdown={expressEnd} />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Nightly Section */}
@@ -180,11 +196,20 @@ const Sorteios = () => {
               </p>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {NIGHTLY_RAFFLES.map((r) => (
-              <RaffleCard key={`night-${r.id}`} raffle={r} badge="Noturna" badgeIcon={Moon} countdown={tonight} />
-            ))}
-          </div>
+
+          {loadingNightly ? (
+            <div className="flex items-center justify-center py-16">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          ) : nightlyRaffles.length === 0 ? (
+            <p className="text-center text-muted-foreground font-bold py-10">Nenhuma rifa noturna ativa.</p>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {nightlyRaffles.map((r) => (
+                <RaffleCard key={r.id} raffle={r} badge="Noturna" badgeIcon={Moon} countdown={tonight} />
+              ))}
+            </div>
+          )}
         </section>
       </div>
       <Footer />

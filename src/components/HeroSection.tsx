@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { DollarSign, Trophy } from "lucide-react";
+import { DollarSign, Trophy, Loader2 } from "lucide-react";
 import ProgressBar from "./ProgressBar";
-import { RAFFLES, handleBuy } from "@/lib/data";
+import { useRaffles } from "@/hooks/useRaffles";
+import { usePurchase } from "@/hooks/usePurchase";
 import heroImage from "@/assets/hero-trophy.png";
 
 const HeroSection = () => {
   const [qty, setQty] = useState(100);
-  const raffle = RAFFLES[0];
+  const { raffles, loading } = useRaffles();
+  const { buyTickets, purchasing } = usePurchase();
+  const raffle = raffles[0];
 
   return (
     <header className="pt-40 pb-20 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
@@ -27,48 +30,59 @@ const HeroSection = () => {
           Escolha o seu prêmio, adquira suas cotas e concorra através da Loteria Federal. O prêmio cai na conta assim que o sorteio é realizado.
         </p>
 
-        <div className="glass-card p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
-            <DollarSign className="w-32 h-32" />
+        {loading ? (
+          <div className="glass-card p-8 rounded-[2.5rem] flex items-center justify-center min-h-[300px]">
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
-          <div className="relative space-y-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Destaque do Momento</p>
-                <h3 className="text-3xl font-black italic uppercase">{raffle.titulo}</h3>
-              </div>
-              <div className="text-right">
-                <p className="text-[10px] font-bold text-muted-foreground uppercase">Cota por</p>
-                <p className="text-3xl font-black">R$ {raffle.preco.toFixed(2)}</p>
-              </div>
+        ) : raffle ? (
+          <div className="glass-card p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
+              <DollarSign className="w-32 h-32" />
             </div>
+            <div className="relative space-y-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Destaque do Momento</p>
+                  <h3 className="text-3xl font-black italic uppercase">{raffle.titulo}</h3>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Cota por</p>
+                  <p className="text-3xl font-black">R$ {Number(raffle.ticket_price).toFixed(2)}</p>
+                </div>
+              </div>
 
-            <ProgressBar vendidos={raffle.vendidos} total={raffle.total} />
+              <ProgressBar vendidos={raffle.tickets_sold} total={raffle.total_tickets} />
 
-            <div className="grid grid-cols-4 gap-3">
-              {[100, 500, 1000, 5000].map((val) => (
-                <button
-                  key={val}
-                  onClick={() => setQty(val)}
-                  className={`py-4 rounded-2xl border text-xs font-black transition-all ${
-                    qty === val
-                      ? "gold-gradient border-primary text-primary-foreground"
-                      : "bg-secondary border-border hover:border-muted-foreground"
-                  }`}
-                >
-                  +{val}
-                </button>
-              ))}
+              <div className="grid grid-cols-4 gap-3">
+                {[100, 500, 1000, 5000].map((val) => (
+                  <button
+                    key={val}
+                    onClick={() => setQty(val)}
+                    className={`py-4 rounded-2xl border text-xs font-black transition-all ${
+                      qty === val
+                        ? "gold-gradient border-primary text-primary-foreground"
+                        : "bg-secondary border-border hover:border-muted-foreground"
+                    }`}
+                  >
+                    +{val}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => buyTickets(raffle.id, qty)}
+                disabled={purchasing}
+                className="w-full gold-gradient py-6 rounded-2xl text-primary-foreground font-black uppercase italic tracking-widest hover:scale-[1.02] active:scale-95 transition-all pulse-gold disabled:opacity-50"
+              >
+                {purchasing ? "Processando..." : "Garantir Minha Sorte"}
+              </button>
             </div>
-
-            <button
-              onClick={() => handleBuy(raffle, qty)}
-              className="w-full gold-gradient py-6 rounded-2xl text-primary-foreground font-black uppercase italic tracking-widest hover:scale-[1.02] active:scale-95 transition-all pulse-gold"
-            >
-              Garantir Minha Sorte
-            </button>
           </div>
-        </div>
+        ) : (
+          <div className="glass-card p-8 rounded-[2.5rem] text-center">
+            <p className="text-muted-foreground font-bold">Nenhum sorteio ativo no momento.</p>
+          </div>
+        )}
       </div>
 
       <div className="hidden lg:block relative">
