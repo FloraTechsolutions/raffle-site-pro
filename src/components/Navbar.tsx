@@ -61,6 +61,30 @@ const Navbar = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Realtime subscription for profile balance updates
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel("navbar-profile")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "profiles", filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          const updated = payload.new as any;
+          setProfile({
+            nome_completo: updated.nome_completo,
+            saldo_carteira: updated.saldo_carteira,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
