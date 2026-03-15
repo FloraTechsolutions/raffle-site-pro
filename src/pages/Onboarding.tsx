@@ -28,7 +28,8 @@ const Onboarding = () => {
 
       const { error } = await supabase
         .from("profiles")
-        .update({
+        .upsert({
+          user_id: user.id, // Garante o vínculo com o usuário logado
           pix_key: pixKey.trim(),
           crypto_wallet: cryptoWallet.trim() || null,
           onboarding_complete: true,
