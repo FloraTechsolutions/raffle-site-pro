@@ -106,7 +106,7 @@ const Dashboard = () => {
               <User className="w-4 h-4 text-primary" />
               <span className="text-[10px] font-black uppercase tracking-widest">Nome</span>
             </div>
-            <p className="text-lg font-black">{profile?.nome_completo || "—"}</p>
+            <p className="text-lg font-black">{profile?.full_name || "—"}</p>
           </div>
 
           {/* Balance */}
