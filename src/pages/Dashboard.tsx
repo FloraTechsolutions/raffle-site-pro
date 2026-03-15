@@ -6,8 +6,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 interface Profile {
-  nome_completo: string | null;
-  saldo_carteira: number;
+  full_name: string | null;
+  wallet_balance: number;
   pix_key: string | null;
   crypto_wallet: string | null;
   telefone: string | null;
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
       const { data } = await supabase
         .from("profiles")
-        .select("nome_completo, saldo_carteira, pix_key, crypto_wallet, telefone")
+        .select("full_name, wallet_balance, pix_key, crypto_wallet, telefone")
         .eq("user_id", user.id)
         .maybeSingle();
 
@@ -53,8 +53,8 @@ const Dashboard = () => {
         }, (payload) => {
           const p = payload.new as any;
           setProfile({
-            nome_completo: p.nome_completo,
-            saldo_carteira: p.saldo_carteira,
+            full_name: p.full_name,
+            wallet_balance: p.wallet_balance,
             pix_key: p.pix_key,
             crypto_wallet: p.crypto_wallet,
             telefone: p.telefone,
@@ -68,7 +68,7 @@ const Dashboard = () => {
     setupRealtime();
   }, [navigate]);
 
-  const balance = Number(profile?.saldo_carteira || 0).toLocaleString("pt-BR", {
+  const balance = Number(profile?.wallet_balance || 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
