@@ -17,7 +17,7 @@ const RaffleCard = ({ raffle }: { raffle: Raffle }) => {
           <img
             src={raffle.image_url}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-            alt={raffle.titulo}
+            alt={raffle.title}
           />
           <div className="absolute top-5 left-5 px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase flex items-center gap-1.5">
             <Zap className="w-3 h-3 text-primary" />
@@ -27,9 +27,9 @@ const RaffleCard = ({ raffle }: { raffle: Raffle }) => {
       )}
       <div className="p-8 space-y-6 flex-1 flex flex-col">
         <div className="space-y-2">
-          <h4 className="text-2xl font-black uppercase italic tracking-tight">{raffle.titulo}</h4>
-          {raffle.descricao && (
-            <p className="text-muted-foreground text-xs font-bold uppercase">{raffle.descricao}</p>
+          <h4 className="text-2xl font-black uppercase italic tracking-tight">{raffle.title}</h4>
+          {raffle.description && (
+            <p className="text-muted-foreground text-xs font-bold uppercase">{raffle.description}</p>
           )}
         </div>
 
