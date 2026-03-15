@@ -44,6 +44,7 @@ const HeroSection = () => {
                 <div>
                   <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] mb-1">Destaque do Momento</p>
                   <h3 className="text-3xl font-black italic uppercase">{raffle.title}</h3>
+                  <p className="text-muted-foreground text-xs font-bold uppercase">{raffle.description}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-[10px] font-bold text-muted-foreground uppercase">Cota por</p>
