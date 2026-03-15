@@ -13,8 +13,8 @@ const NAV_LINKS = [
 ];
 
 interface Profile {
-  nome_completo: string | null;
-  saldo_carteira: number;
+  full_name: string | null;
+  wallet_balance: number;
 }
 
 const Navbar = () => {
@@ -28,7 +28,7 @@ const Navbar = () => {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
-      .select("nome_completo, saldo_carteira")
+      .select("full_name, wallet_balance")
       .eq("user_id", userId)
       .maybeSingle();
     setProfile(data);
