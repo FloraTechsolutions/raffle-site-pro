@@ -23,7 +23,7 @@ export type Database = {
           nome_completo: string | null
           onboarding_complete: boolean
           pix_key: string | null
-          saldo_carteira: number
+          wallet_balance: number
           telefone: string | null
           updated_at: string
           user_id: string
@@ -36,7 +36,7 @@ export type Database = {
           nome_completo?: string | null
           onboarding_complete?: boolean
           pix_key?: string | null
-          saldo_carteira?: number
+          wallet_balance?: number
           telefone?: string | null
           updated_at?: string
           user_id: string
@@ -49,7 +49,7 @@ export type Database = {
           nome_completo?: string | null
           onboarding_complete?: boolean
           pix_key?: string | null
-          saldo_carteira?: number
+          wallet_balance?: number
           telefone?: string | null
           updated_at?: string
           user_id?: string
@@ -59,7 +59,7 @@ export type Database = {
       raffles: {
         Row: {
           created_at: string
-          descricao: string | null
+          description: string | null
           draw_date: string | null
           id: string
           image_url: string | null
@@ -67,14 +67,14 @@ export type Database = {
           status: Database["public"]["Enums"]["raffle_status"]
           ticket_price: number
           tickets_sold: number
-          tipo: Database["public"]["Enums"]["raffle_type"]
-          titulo: string
+          type: Database["public"]["Enums"]["raffle_type"]
+          title: string
           total_tickets: number
           updated_at: string
         }
         Insert: {
           created_at?: string
-          descricao?: string | null
+          description?: string | null
           draw_date?: string | null
           id?: string
           image_url?: string | null
@@ -82,14 +82,14 @@ export type Database = {
           status?: Database["public"]["Enums"]["raffle_status"]
           ticket_price?: number
           tickets_sold?: number
-          tipo?: Database["public"]["Enums"]["raffle_type"]
+          type?: Database["public"]["Enums"]["raffle_type"]
           titulo: string
           total_tickets: number
           updated_at?: string
         }
         Update: {
           created_at?: string
-          descricao?: string | null
+          description?: string | null
           draw_date?: string | null
           id?: string
           image_url?: string | null
@@ -97,7 +97,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["raffle_status"]
           ticket_price?: number
           tickets_sold?: number
-          tipo?: Database["public"]["Enums"]["raffle_type"]
+          type?: Database["public"]["Enums"]["raffle_type"]
           titulo?: string
           total_tickets?: number
           updated_at?: string
