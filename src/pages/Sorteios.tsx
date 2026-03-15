@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { ShoppingCart, Zap, Clock, Moon, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { ShoppingCart, Zap, Clock, Moon, Bitcoin, Loader2, Sparkles } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
@@ -9,56 +9,22 @@ import { usePurchase } from "@/hooks/usePurchase";
 
 const QUICK_AMOUNTS = [10, 20, 50, 100];
 
-/* ── Countdown hook ── */
-function useCountdown(targetDate: Date) {
-  const [timeLeft, setTimeLeft] = useState(getTimeLeft(targetDate));
-
-  useEffect(() => {
-    const id = setInterval(() => setTimeLeft(getTimeLeft(targetDate)), 1000);
-    return () => clearInterval(id);
-  }, [targetDate]);
-
-  return timeLeft;
-}
-
-function getTimeLeft(target: Date) {
-  const diff = Math.max(0, target.getTime() - Date.now());
-  const h = Math.floor(diff / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  const s = Math.floor((diff % 60000) / 1000);
-  return { h, m, s, expired: diff === 0 };
-}
-
-function pad(n: number) {
-  return String(n).padStart(2, "0");
-}
-
-const CountdownBadge = ({ target }: { target: Date }) => {
-  const { h, m, s, expired } = useCountdown(target);
-  if (expired) return <span className="text-destructive font-black text-xs">ENCERRADO</span>;
-  return (
-    <span className="font-mono text-primary font-black text-lg tabular-nums">
-      {pad(h)}:{pad(m)}:{pad(s)}
-    </span>
-  );
-};
-
 const RaffleCard = ({
   raffle,
   badge,
   badgeIcon: Icon,
-  countdown,
+  isCrypto,
 }: {
   raffle: Raffle;
   badge: string;
   badgeIcon: typeof Zap;
-  countdown?: Date;
+  isCrypto?: boolean;
 }) => {
   const [qty, setQty] = useState(100);
   const { buyTickets, purchasing } = usePurchase();
 
   return (
-    <div className="glass rounded-4xl hover:border-primary/30 transition-all group overflow-hidden flex flex-col">
+    <div className={`glass rounded-4xl hover:border-primary/30 transition-all group overflow-hidden flex flex-col ${isCrypto ? "border-primary/20" : ""}`}>
       {raffle.image_url && (
         <div className="h-56 overflow-hidden relative">
           <img
@@ -70,6 +36,12 @@ const RaffleCard = ({
             <Icon className="w-3 h-3 text-primary" />
             {badge}
           </div>
+          {isCrypto && (
+            <div className="absolute top-5 right-5 px-3 py-1.5 bg-primary/90 text-primary-foreground rounded-full text-[9px] font-black uppercase flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              Prêmio Cripto
+            </div>
+          )}
         </div>
       )}
       <div className="p-8 space-y-6 flex-1 flex flex-col">
@@ -80,20 +52,16 @@ const RaffleCard = ({
           )}
         </div>
 
-        {countdown && (
-          <div className="flex items-center gap-3 glass px-5 py-3 rounded-2xl">
-            <Clock className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black uppercase text-muted-foreground">Sorteio em:</span>
-            <CountdownBadge target={countdown} />
-          </div>
-        )}
-
         <ProgressBar vendidos={raffle.tickets_sold} total={raffle.total_tickets} />
 
         <div className="flex justify-between items-center pt-4 border-t border-border">
           <div>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">Cota por</p>
-            <p className="text-2xl font-black text-primary">R$ {Number(raffle.ticket_price).toFixed(2).replace(".", ",")}</p>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">
+              {isCrypto ? "Cota em créditos" : "Cota por"}
+            </p>
+            <p className="text-2xl font-black text-primary">
+              {Number(raffle.ticket_price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+            </p>
           </div>
           <div className="text-right">
             <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">Total</p>
@@ -132,85 +100,96 @@ const RaffleCard = ({
   );
 };
 
-/* ── Page ── */
+type TabFilter = "all" | "express" | "nightly" | "crypto";
+
 const Sorteios = () => {
-  const { raffles: expressRaffles, loading: loadingExpress } = useRaffles("express");
-  const { raffles: nightlyRaffles, loading: loadingNightly } = useRaffles("nightly");
+  const [activeTab, setActiveTab] = useState<TabFilter>("all");
+  const { raffles, loading } = useRaffles();
+  const { raffles: cryptoRaffles, loading: loadingCrypto } = useRaffles("crypto");
 
-  const expressEnd = new Date(Date.now() + 60 * 60 * 1000);
+  const filteredRaffles = activeTab === "all"
+    ? raffles
+    : raffles.filter((r) => r.tipo === activeTab);
 
-  const now = new Date();
-  const tonight = new Date(now);
-  tonight.setHours(21, 0, 0, 0);
-  if (tonight.getTime() <= now.getTime()) tonight.setDate(tonight.getDate() + 1);
+  const allRaffles = activeTab === "crypto" ? cryptoRaffles : filteredRaffles;
+  const isLoading = loading || (activeTab === "crypto" && loadingCrypto);
 
-  const loading = loadingExpress || loadingNightly;
+  const tabs: { key: TabFilter; label: string; icon: typeof Zap }[] = [
+    { key: "all", label: "Todos", icon: Zap },
+    { key: "express", label: "Expressas", icon: Zap },
+    { key: "nightly", label: "Noturnas", icon: Moon },
+    { key: "crypto", label: "Rifas Cripto", icon: Bitcoin },
+  ];
 
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto space-y-20">
-        {/* Express Section */}
-        <section className="space-y-10">
-          <div className="flex items-center gap-4">
-            <div className="p-3 gold-gradient rounded-2xl text-primary-foreground">
-              <Zap className="w-6 h-6" />
+      <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto space-y-10">
+        <div className="space-y-4">
+          <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter">
+            Todos os <span className="text-primary">Sorteios</span>
+          </h2>
+          <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-[0.4em]">
+            Escolha seu prêmio e concorra agora
+          </p>
+        </div>
+
+        {/* Tab Filters */}
+        <div className="flex flex-wrap gap-2">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all ${
+                activeTab === tab.key
+                  ? "gold-gradient text-primary-foreground"
+                  : "glass text-muted-foreground hover:text-foreground hover:border-primary/30"
+              }`}
+            >
+              <tab.icon className="w-3.5 h-3.5" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Crypto Bonus Banner */}
+        {activeTab === "crypto" && (
+          <div className="gold-gradient rounded-3xl p-6 flex items-center gap-4 animate-fade-up">
+            <div className="p-3 bg-primary-foreground/20 rounded-2xl shrink-0">
+              <Bitcoin className="w-8 h-8 text-primary-foreground" />
             </div>
-            <div>
-              <h3 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter">
-                Rifas <span className="text-primary">Expressas</span>
-              </h3>
-              <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-[0.3em]">
-                Sorteio em 60 minutos — não perca!
+            <div className="text-primary-foreground">
+              <p className="font-black uppercase text-lg">Rifas com Prêmios em Cripto!</p>
+              <p className="text-sm font-medium opacity-90">
+                Ganhe Bitcoin, Ethereum e outras criptos. Depósitos em cripto ganham 40% de bônus!
               </p>
             </div>
           </div>
+        )}
 
-          {loadingExpress ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
-          ) : expressRaffles.length === 0 ? (
-            <p className="text-center text-muted-foreground font-bold py-10">Nenhuma rifa expressa ativa.</p>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {expressRaffles.map((r) => (
-                <RaffleCard key={r.id} raffle={r} badge="Expressa" badgeIcon={Zap} countdown={expressEnd} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        {/* Nightly Section */}
-        <section className="space-y-10">
-          <div className="flex items-center gap-4">
-            <div className="p-3 glass border-primary/30 border rounded-2xl text-primary">
-              <Moon className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter">
-                Rifas <span className="text-primary">Noturnas</span>
-              </h3>
-              <p className="text-muted-foreground text-[10px] font-bold uppercase tracking-[0.3em]">
-                Sorteio toda noite às 21:00h
-              </p>
-            </div>
+        {/* Raffles Grid */}
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
           </div>
-
-          {loadingNightly ? (
-            <div className="flex items-center justify-center py-16">
-              <Loader2 className="w-8 h-8 animate-spin text-primary" />
-            </div>
-          ) : nightlyRaffles.length === 0 ? (
-            <p className="text-center text-muted-foreground font-bold py-10">Nenhuma rifa noturna ativa.</p>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {nightlyRaffles.map((r) => (
-                <RaffleCard key={r.id} raffle={r} badge="Noturna" badgeIcon={Moon} countdown={tonight} />
-              ))}
-            </div>
-          )}
-        </section>
+        ) : allRaffles.length === 0 ? (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground font-bold text-lg">Nenhum sorteio ativo nesta categoria.</p>
+            <p className="text-muted-foreground text-sm mt-2">Novos sorteios em breve!</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {allRaffles.map((r) => (
+              <RaffleCard
+                key={r.id}
+                raffle={r}
+                badge={r.tipo === "express" ? "Expressa" : r.tipo === "nightly" ? "Noturna" : "Cripto"}
+                badgeIcon={r.tipo === "express" ? Zap : r.tipo === "nightly" ? Moon : Bitcoin}
+                isCrypto={r.tipo === "crypto"}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <Footer />
       <WhatsAppFAB />
