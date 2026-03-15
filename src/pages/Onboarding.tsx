@@ -33,6 +33,8 @@ const Onboarding = () => {
           pix_key: pixKey.trim(),
           crypto_wallet: cryptoWallet.trim() || null,
           onboarding_complete: true,
+          nome_completo: user.user_metadata?.full_name || user.user_metadata?.nome_completo || "Usuário"
+          }, { onConflict: 'user_id' });
         })
         .eq("user_id", user.id);
 
