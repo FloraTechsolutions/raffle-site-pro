@@ -69,8 +69,8 @@ const Navbar = () => {
         (payload) => {
           const updated = payload.new as any;
           setProfile({
-            nome_completo: updated.nome_completo,
-            saldo_carteira: updated.saldo_carteira,
+            full_name: updated.full_name,
+            wallet_balance: updated.wallet_balance,
           });
         }
       )
@@ -88,8 +88,8 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const firstName = profile?.nome_completo?.split(" ")[0] || "Usuário";
-  const balance = Number(profile?.saldo_carteira || 0).toLocaleString("pt-BR", {
+  const firstName = profile?.full_name?.split(" ")[0] || "Usuário";
+  const balance = Number(profile?.wallet_balance || 0).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
