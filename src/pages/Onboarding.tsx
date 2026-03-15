@@ -34,9 +34,9 @@ const Onboarding = () => {
           crypto_wallet: cryptoWallet.trim() || null,
           onboarding_complete: true,
           full_name: user.user_metadata?.full_name || user.user_metadata?.nome_completo || "Usuário"
-          }, { onConflict: 'user_id' });
-        })
-        .eq("user_id", user.id);
+        }, {
+          onConflict: 'user_id' 
+        });
 
       if (error) throw error;
 
