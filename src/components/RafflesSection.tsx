@@ -21,7 +21,7 @@ const RaffleCard = ({ raffle }: { raffle: Raffle }) => {
           />
           <div className="absolute top-5 left-5 px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase flex items-center gap-1.5">
             <Zap className="w-3 h-3 text-primary" />
-            {raffle.tipo === "express" ? "Expressa" : "Noturna"}
+            {raffle.type === "express" ? "Expressa" : "Noturna"}
           </div>
         </div>
       )}
