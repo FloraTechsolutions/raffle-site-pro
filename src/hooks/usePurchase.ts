@@ -8,16 +8,16 @@ export const usePurchase = () => {
   const navigate = useNavigate();
 
   const buyTickets = async (raffleId: string, quantidade: number) => {
-    // Check auth
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      toast.error("Faça login para comprar cotas!");
-      navigate("/auth");
-      return null;
-    }
-
-    setPurchasing(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Faça login para comprar cotas!");
+        navigate("/auth");
+        return null;
+      }
+
+      setPurchasing(true);
+
       const { data, error } = await supabase.rpc("process_ticket_purchase", {
         p_user_id: user.id,
         p_raffle_id: raffleId,
@@ -36,8 +36,8 @@ export const usePurchase = () => {
         if (errorMsg === "Saldo insuficiente") {
           toast("💰 Adicione saldo à sua carteira para continuar.", {
             action: {
-              label: "Adicionar Saldo",
-              onClick: () => toast.info("Funcionalidade de depósito em breve!"),
+              label: "Depositar",
+              onClick: () => navigate("/depositar"),
             },
           });
         }
@@ -45,7 +45,7 @@ export const usePurchase = () => {
       }
 
       toast.success(
-        `✅ ${result.quantidade} cotas compradas com sucesso! Novo saldo: ${Number(result.novo_saldo).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`
+        `✅ ${result.quantidade} cotas compradas! Novo saldo: ${Number(result.novo_saldo).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}`
       );
       return result;
     } catch {

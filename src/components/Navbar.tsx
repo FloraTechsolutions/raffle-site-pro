@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Crown, Menu, X, LogOut, Wallet } from "lucide-react";
+import { Crown, Menu, X, LogOut, Wallet, LayoutDashboard } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { WHATSAPP_NUMBER } from "@/lib/data";
@@ -25,7 +25,6 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Fetch profile data
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from("profiles")
@@ -36,7 +35,6 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    // Listen for auth changes FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
@@ -48,7 +46,6 @@ const Navbar = () => {
       setLoading(false);
     });
 
-    // Then get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
@@ -61,7 +58,6 @@ const Navbar = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Realtime subscription for profile balance updates
   useEffect(() => {
     if (!user) return;
 
@@ -128,7 +124,6 @@ const Navbar = () => {
           </h1>
         </Link>
 
-        {/* Desktop nav links */}
         <div className="hidden md:flex gap-8 text-[10px] font-extrabold uppercase tracking-[0.2em] text-muted-foreground">
           {NAV_LINKS.map((l) =>
             renderLink(l, undefined, "hover:text-primary transition-colors")
@@ -139,8 +134,11 @@ const Navbar = () => {
           {!loading && (
             <>
               {user ? (
-                /* Authenticated UI */
                 <div className="hidden md:flex items-center gap-4">
+                  <Link to="/dashboard" className="flex items-center gap-2 text-xs font-bold text-muted-foreground hover:text-primary transition-colors">
+                    <LayoutDashboard className="w-4 h-4" />
+                    <span>Painel</span>
+                  </Link>
                   <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
                     <Wallet className="w-4 h-4 text-primary" />
                     <span>{balance}</span>
@@ -157,7 +155,6 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                /* Unauthenticated UI */
                 <Link
                   to="/auth"
                   className="hidden md:block bg-secondary border border-border px-5 py-2 rounded-full text-[10px] font-black uppercase hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
@@ -177,7 +174,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {open && (
         <div className="md:hidden mt-4 pb-4 border-t border-border pt-4 space-y-3 animate-fade-up">
           {NAV_LINKS.map((l) =>
@@ -201,6 +197,13 @@ const Navbar = () => {
                       {balance}
                     </div>
                   </div>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="block w-full py-3 rounded-xl border border-primary text-center text-xs font-black uppercase text-primary hover:bg-primary hover:text-primary-foreground transition-all"
+                  >
+                    Meu Painel
+                  </Link>
                   <button
                     onClick={() => {
                       handleSignOut();

@@ -8,6 +8,9 @@ import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
 import Sorteios from "./pages/Sorteios.tsx";
 import FAQ from "./pages/FAQ.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import Onboarding from "./pages/Onboarding.tsx";
+import Depositar from "./pages/Depositar.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +27,9 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/sorteios" element={<Sorteios />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/depositar" element={<Depositar />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

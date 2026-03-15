@@ -29,9 +29,23 @@ const Auth = () => {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Login realizado com sucesso!");
+
+        // Check if onboarding is complete
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("onboarding_complete")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          if (profile && !profile.onboarding_complete) {
+            navigate("/onboarding");
+            return;
+          }
+        }
         navigate("/");
       } else {
-        // Sign up
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -42,7 +56,6 @@ const Auth = () => {
         });
         if (error) throw error;
 
-        // Insert profile row immediately if user was created
         if (data.user) {
           await supabase.from("profiles").upsert({
             user_id: data.user.id,
@@ -52,7 +65,8 @@ const Auth = () => {
           }, { onConflict: "user_id" });
         }
 
-        toast.success("Conta criada! Verifique seu e-mail para confirmar.");
+        toast.success("Conta criada! Redirecionando para finalizar cadastro...");
+        navigate("/onboarding");
       }
     } catch (error: any) {
       toast.error(error.message || "Erro na autenticação");
@@ -87,6 +101,7 @@ const Auth = () => {
           <div className="flex items-center justify-center gap-6 text-muted-foreground text-xs font-bold uppercase tracking-widest">
             <span>🔒 100% Seguro</span>
             <span>⚡ PIX Instantâneo</span>
+            <span>₿ Cripto Aceito</span>
           </div>
         </div>
       </div>
@@ -94,7 +109,6 @@ const Auth = () => {
       {/* Right — Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center gap-2 mb-4">
             <div className="gold-gradient p-2 rounded-lg text-primary-foreground">
               <Crown className="w-5 h-5" />
@@ -115,7 +129,6 @@ const Auth = () => {
             </p>
           </div>
 
-          {/* Toggle */}
           <div className="grid grid-cols-2 gap-2 p-1 glass rounded-2xl">
             <button
               onClick={() => setIsLogin(true)}
@@ -136,7 +149,6 @@ const Auth = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Nome Completo (register only) */}
             {!isLogin && (
               <div className="space-y-2 animate-fade-up">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Nome Completo</label>
@@ -154,7 +166,6 @@ const Auth = () => {
               </div>
             )}
 
-            {/* Email */}
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">E-mail</label>
               <div className="relative">
@@ -170,7 +181,6 @@ const Auth = () => {
               </div>
             </div>
 
-            {/* WhatsApp (register only) */}
             {!isLogin && (
               <div className="space-y-2 animate-fade-up">
                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">WhatsApp</label>
@@ -188,7 +198,6 @@ const Auth = () => {
               </div>
             )}
 
-            {/* Password */}
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Senha</label>
               <div className="relative">
