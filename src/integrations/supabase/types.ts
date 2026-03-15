@@ -18,8 +18,11 @@ export type Database = {
         Row: {
           avatar_url: string | null
           created_at: string
+          crypto_wallet: string | null
           id: string
           nome_completo: string | null
+          onboarding_complete: boolean
+          pix_key: string | null
           saldo_carteira: number
           telefone: string | null
           updated_at: string
@@ -28,8 +31,11 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          crypto_wallet?: string | null
           id?: string
           nome_completo?: string | null
+          onboarding_complete?: boolean
+          pix_key?: string | null
           saldo_carteira?: number
           telefone?: string | null
           updated_at?: string
@@ -38,8 +44,11 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          crypto_wallet?: string | null
           id?: string
           nome_completo?: string | null
+          onboarding_complete?: boolean
+          pix_key?: string | null
           saldo_carteira?: number
           telefone?: string | null
           updated_at?: string
@@ -178,7 +187,7 @@ export type Database = {
       app_role: "admin" | "moderator" | "user"
       purchase_status: "pending" | "paid" | "cancelled" | "expired"
       raffle_status: "active" | "completed" | "cancelled"
-      raffle_type: "express" | "nightly"
+      raffle_type: "express" | "nightly" | "crypto"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -309,7 +318,7 @@ export const Constants = {
       app_role: ["admin", "moderator", "user"],
       purchase_status: ["pending", "paid", "cancelled", "expired"],
       raffle_status: ["active", "completed", "cancelled"],
-      raffle_type: ["express", "nightly"],
+      raffle_type: ["express", "nightly", "crypto"],
     },
   },
 } as const
