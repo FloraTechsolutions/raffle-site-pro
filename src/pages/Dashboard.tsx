@@ -32,7 +32,7 @@ const Dashboard = () => {
         .eq("user_id", user.id)
         .maybeSingle();
 
-      setProfile(data);
+      setProfile(data as Profile | null);
       setLoading(false);
     };
 
