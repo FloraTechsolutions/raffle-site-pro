@@ -24,29 +24,29 @@ const RaffleCard = ({
   const { buyTickets, purchasing } = usePurchase();
 
   return (
-    <div className={`glass rounded-4xl hover:border-primary/30 transition-all group overflow-hidden flex flex-col ${isCrypto ? "border-primary/20" : ""}`}>
+    <div className={`glass rounded-3xl sm:rounded-4xl hover:border-primary/30 transition-all group overflow-hidden flex flex-col ${isCrypto ? "border-primary/20" : ""}`}>
       {raffle.image_url && (
-        <div className="h-56 overflow-hidden relative">
+        <div className="h-48 sm:h-56 overflow-hidden relative">
           <img
             src={raffle.image_url}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             alt={raffle.titulo}
           />
-          <div className="absolute top-5 left-5 px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase flex items-center gap-1.5">
+          <div className="absolute top-4 left-4 sm:top-5 sm:left-5 px-3 sm:px-4 py-1.5 glass rounded-full text-[10px] font-black uppercase flex items-center gap-1.5">
             <Icon className="w-3 h-3 text-primary" />
             {badge}
           </div>
           {isCrypto && (
-            <div className="absolute top-5 right-5 px-3 py-1.5 bg-primary/90 text-primary-foreground rounded-full text-[9px] font-black uppercase flex items-center gap-1">
+            <div className="absolute top-4 right-4 sm:top-5 sm:right-5 px-3 py-1.5 bg-primary/90 text-primary-foreground rounded-full text-[9px] font-black uppercase flex items-center gap-1">
               <Sparkles className="w-3 h-3" />
               Prêmio Cripto
             </div>
           )}
         </div>
       )}
-      <div className="p-8 space-y-6 flex-1 flex flex-col">
+      <div className="p-5 sm:p-8 space-y-5 sm:space-y-6 flex-1 flex flex-col">
         <div className="space-y-2">
-          <h4 className="text-2xl font-black uppercase italic tracking-tight">{raffle.titulo}</h4>
+          <h4 className="text-xl sm:text-2xl font-black uppercase italic tracking-tight">{raffle.titulo}</h4>
           {raffle.descricao && (
             <p className="text-muted-foreground text-xs font-bold uppercase">{raffle.descricao}</p>
           )}
@@ -59,13 +59,13 @@ const RaffleCard = ({
             <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">
               {isCrypto ? "Cota em créditos" : "Cota por"}
             </p>
-            <p className="text-2xl font-black text-primary">
+            <p className="text-xl sm:text-2xl font-black text-primary">
               {Number(raffle.ticket_price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
             </p>
           </div>
           <div className="text-right">
             <p className="text-[10px] text-muted-foreground font-bold uppercase mb-1">Total</p>
-            <p className="text-lg font-black">
+            <p className="text-base sm:text-lg font-black">
               {(Number(raffle.ticket_price) * qty).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
             </p>
           </div>
@@ -76,7 +76,7 @@ const RaffleCard = ({
             <button
               key={val}
               onClick={() => setQty(val)}
-              className={`py-2.5 rounded-xl border text-[10px] font-black transition-all ${
+              className={`py-2.5 rounded-xl border text-[10px] font-black transition-all min-h-[44px] ${
                 qty === val
                   ? "gold-gradient border-primary text-primary-foreground"
                   : "bg-secondary border-border hover:border-muted-foreground"
@@ -90,7 +90,7 @@ const RaffleCard = ({
         <button
           onClick={() => buyTickets(raffle.id, qty)}
           disabled={purchasing}
-          className="mt-auto w-full bg-foreground text-background text-xs font-black uppercase py-4 rounded-2xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+          className="mt-auto w-full bg-foreground text-background text-xs font-black uppercase py-4 min-h-[48px] rounded-2xl hover:bg-primary hover:text-primary-foreground transition-all flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {purchasing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShoppingCart className="w-4 h-4" />}
           {purchasing ? "Processando..." : `Comprar ${qty} Cotas`}
@@ -124,9 +124,9 @@ const Sorteios = () => {
   return (
     <div className="min-h-screen">
       <Navbar />
-      <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto space-y-10">
-        <div className="space-y-4">
-          <h2 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter">
+      <div className="pt-28 sm:pt-32 pb-16 sm:pb-24 px-4 sm:px-6 max-w-7xl mx-auto space-y-8 sm:space-y-10">
+        <div className="space-y-3 sm:space-y-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">
             Todos os <span className="text-primary">Sorteios</span>
           </h2>
           <p className="text-muted-foreground font-bold uppercase text-[10px] tracking-[0.4em]">
@@ -134,13 +134,13 @@ const Sorteios = () => {
           </p>
         </div>
 
-        {/* Tab Filters */}
-        <div className="flex flex-wrap gap-2">
+        {/* Tab Filters - horizontally scrollable on mobile */}
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
           {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all ${
+              className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap shrink-0 min-h-[44px] ${
                 activeTab === tab.key
                   ? "gold-gradient text-primary-foreground"
                   : "glass text-muted-foreground hover:text-foreground hover:border-primary/30"
@@ -154,13 +154,13 @@ const Sorteios = () => {
 
         {/* Crypto Bonus Banner */}
         {activeTab === "crypto" && (
-          <div className="gold-gradient rounded-3xl p-6 flex items-center gap-4 animate-fade-up">
-            <div className="p-3 bg-primary-foreground/20 rounded-2xl shrink-0">
-              <Bitcoin className="w-8 h-8 text-primary-foreground" />
+          <div className="gold-gradient rounded-2xl sm:rounded-3xl p-5 sm:p-6 flex items-center gap-4 animate-fade-up">
+            <div className="p-2.5 sm:p-3 bg-primary-foreground/20 rounded-xl sm:rounded-2xl shrink-0">
+              <Bitcoin className="w-6 h-6 sm:w-8 sm:h-8 text-primary-foreground" />
             </div>
             <div className="text-primary-foreground">
-              <p className="font-black uppercase text-lg">Rifas com Prêmios em Cripto!</p>
-              <p className="text-sm font-medium opacity-90">
+              <p className="font-black uppercase text-base sm:text-lg">Rifas com Prêmios em Cripto!</p>
+              <p className="text-xs sm:text-sm font-medium opacity-90">
                 Ganhe Bitcoin, Ethereum e outras criptos. Depósitos em cripto ganham 40% de bônus!
               </p>
             </div>
@@ -178,7 +178,7 @@ const Sorteios = () => {
             <p className="text-muted-foreground text-sm mt-2">Novos sorteios em breve!</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
             {allRaffles.map((r) => (
               <RaffleCard
                 key={r.id}
