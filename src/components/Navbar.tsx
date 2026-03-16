@@ -31,7 +31,7 @@ const Navbar = () => {
       .select("full_name, wallet_balance")
       .eq("user_id", userId)
       .maybeSingle();
-    setProfile(data);
+    setProfile(data as Profile | null);
   };
 
   useEffect(() => {
